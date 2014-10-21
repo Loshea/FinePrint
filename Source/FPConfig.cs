@@ -66,6 +66,72 @@ namespace FinePrint
                 CreateDefaultConfig();
         }
 
+        public static class Tourist
+        {
+            public static int MaximumAvailable = 2;
+            public static int MaximumActive = 4;
+            public static int TrivialWaypoints = 1;
+            public static int SignificantWaypoints = 2;
+            public static int ExceptionalWaypoints = 3;
+            public static float TrivialHomeNearbyChance = 70;
+            public static float SignificantHomeNearbyChance = 35;
+            public static float ExceptionalHomeNearbyChance = 0;
+            public static float TrivialLowAltitudeChance = 70;
+            public static float SignificantLowAltitudeChance = 35;
+            public static float ExceptionalLowAltitudeChance = 0;
+            public static double TrivialHomeNearbyRange = 100000;
+            public static double SignificantHomeNearbyRange = 200000;
+            public static double ExceptionalHomeNearbyRange = 300000;
+            public static double TrivialLowAltitudeMultiplier = 0.1;
+            public static double SignificantLowAltitudeMultiplier = 0.3;
+            public static double ExceptionalLowAltitudeMultiplier = 0.5;
+            public static double TrivialRange = 100000;
+            public static double SignificantRange = 200000;
+            public static double ExceptionalRange = 300000;
+            public static double TriggerRange = 15000;
+
+            public static class Expire
+            {
+                public static int MinimumExpireDays = 1;
+                public static int MaximumExpireDays = 7;
+                public static int DeadlineDays = 100;
+            }
+
+            public static class Funds
+            {
+                public static float BaseAdvance = 10000;
+                public static float BaseReward = 60000;
+                public static float BaseFailure = -5000;
+                public static float SignificantMultiplier = 1.1f;
+                public static float ExceptionalMultiplier = 1.2f;
+                public static float WaypointBaseReward = 9000;
+                public static float WaypointSignificantMultiplier = 1.1f;
+                public static float WaypointExceptionalMultiplier = 1.2f;
+            }
+
+           
+            public static class Science
+            {
+                public static float BaseReward = 00;                //Not much science to be had here
+                public static float SignificantMultiplier = 1.1f;
+                public static float ExceptionalMultiplier = 1.2f;
+                public static float WaypointBaseReward = 20;
+                public static float WaypointSignificantMultiplier = 1.1f;
+                public static float WaypointExceptionalMultiplier = 1.2f;
+            }
+
+            public static class Reputation
+            {
+                public static float BaseReward = 110;
+                public static float BaseFailure = 130;
+                public static float SignificantMultiplier = 1.1f;
+                public static float ExceptionalMultiplier = 1.2f;
+                public static float WaypointBaseReward = 7.5f;
+                public static float WaypointSignificantMultiplier = 1.1f;
+                public static float WaypointExceptionalMultiplier = 1.2f;
+            }
+        }
+
         public static class Aerial
         {
             public static int MaximumAvailable = 2;
@@ -490,6 +556,12 @@ namespace FinePrint
 
             //I could probably do this in a loop, but these are really settings I need to modify by hand, so I will do it manually.
             ConfigNode topNode = config.AddNode(new ConfigNode("FinePrint"));
+
+            ConfigNode touristNode=topNode.AddNode(new ConfigNode("Tourist");
+            ConfigNode touristExpire = touristNode.AddNode(new ConfigNode("Expiration"));
+            ConfigNode touristFunds = touristNode.AddNode(new ConfigNode("Funds"));
+            ConfigNode touristScience = touristNode.AddNode(new ConfigNode("Science"));
+            ConfigNode touristReputation = touristNode.AddNode(new ConfigNode("Reputation"));
 
             ConfigNode aerialNode = topNode.AddNode(new ConfigNode("Aerial"));
             ConfigNode aerialExpire = aerialNode.AddNode(new ConfigNode("Expiration"));
