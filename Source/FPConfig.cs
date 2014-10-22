@@ -130,6 +130,14 @@ namespace FinePrint
                 public static float WaypointSignificantMultiplier = 1.1f;
                 public static float WaypointExceptionalMultiplier = 1.2f;
             }
+
+            public static class Stress
+            {
+                public static float MaxGForce = 13;
+                public static float MinGForce - 3;
+                public static long  MaxSustainedDuration=1000;
+                public static long  MinSustainedDuration=30;
+            }
         }
 
         public static class Aerial

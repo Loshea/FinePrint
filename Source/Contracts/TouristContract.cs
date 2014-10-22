@@ -31,12 +31,11 @@ namespace FinePrint.Contracts
 
 		protected override bool Generate()
 		{
-            if (AreWingsUnlocked() == false)
-                return false;
+           
 
             int offeredContracts = 0;
             int activeContracts = 0;
-            foreach (AerialContract contract in ContractSystem.Instance.GetCurrentContracts<AerialContract>())
+            foreach (TouristContract contract in ContractSystem.Instance.GetCurrentContracts<TouristContract>())
             {
                 if (contract.ContractState == Contract.State.Offered)
                     offeredContracts++;
@@ -44,13 +43,15 @@ namespace FinePrint.Contracts
                     activeContracts++;
             }
 
-            if (offeredContracts >= FPConfig.Aerial.MaximumAvailable || activeContracts >= FPConfig.Aerial.MaximumActive)
+            if (offeredContracts >= FPConfig.Tourist.MaximumAvailable || activeContracts >= FPConfig.Tourist.MaximumActive)
                 return false;
 
             double range = 10000.0;
 			System.Random generator = new System.Random(this.MissionSeed);
 			int additionalWaypoints = 0;
-			List<CelestialBody> allBodies = GetBodies_Reached(true, false);
+            List<CelestialBody> allBodies = GetBodies_Reached(true, false); //Make this simple - allow kerbin, but not the sun.  In fact, we should proabaly
+                                                                            //Just stick with Kerbin for starters.  Would you want to ride with a Justing Beiber for
+                                                                            //10 months on the way to mars?  No.  You'd kill the little fucker.
 			List<CelestialBody> atmosphereBodies = new List<CelestialBody>();
 
 			foreach (CelestialBody body in allBodies)
@@ -65,32 +66,29 @@ namespace FinePrint.Contracts
 			targetBody = atmosphereBodies[generator.Next(0, atmosphereBodies.Count)];
 
             //TODO: Find some common ground to calculate these values automatically without specific names.
+            ///One ofthe many parameters for thsi contract are going to be altitude.  After we set the altitude and orbital
+            ///parameters, we'll see if there are any G restrictions to worry about. Using simple min and max height for now, but will likely
+            ///Add inclination and tighen up the min/max per-contract.  For example, if we pull an orbital contract, then we'll set a minimum of 75KM
+            ///but the contract may actually specify a range of 85 to 95 km - though that may be more for the science than anything else
+            ///I likethe waypoints that are setup, so we may also through thows in as an ObsticalCourse type contract.  Or science.
 			switch (targetBody.GetName())
 			{
 				case "Jool":
-					additionalWaypoints = 0;
-					minAltitude = 15000.0;
-					maxAltitude = 30000.0;
+					
 					break;
 				case "Duna":
-					additionalWaypoints = 1;
-					minAltitude = 8000.0;
-					maxAltitude = 16000.0;
+					
 					break;
 				case "Laythe":
-					additionalWaypoints = 1;
-					minAltitude = 15000.0;
-					maxAltitude = 30000.0;
+					
 					break;
 				case "Eve":
-					additionalWaypoints = 1;
-					minAltitude = 20000.0;
-					maxAltitude = 40000.0;
+					
 					break;
 				case "Kerbin":
 					additionalWaypoints = 2;
-					minAltitude = 12500.0;
-					maxAltitude = 25000.0;
+					minAltitude = 75000.0;
+					maxAltitude = 300000.0;
 					break;
 				default:
 					additionalWaypoints = 0;
@@ -318,37 +316,7 @@ namespace FinePrint.Contracts
             return true;
 		}
 
-		protected static bool AreWingsUnlocked()
-		{
-			if (Util.haveTechnology("AdvancedCanard"))
-				return true;
-			if (Util.haveTechnology("StandardCtrlSrf"))
-				return true;
-			if (Util.haveTechnology("airplaneTail"))
-				return true;
-			if (Util.haveTechnology("CanardController"))
-				return true;
-			if (Util.haveTechnology("deltaWing"))
-				return true;
-			if (Util.haveTechnology("noseConeAdapter"))
-				return true;
-			if (Util.haveTechnology("rocketNoseCone"))
-				return true;
-			if (Util.haveTechnology("smallCtrlSrf"))
-				return true;
-			if (Util.haveTechnology("standardNoseCone"))
-				return true;
-			if (Util.haveTechnology("sweptWing"))
-				return true;
-			if (Util.haveTechnology("tailfin"))
-				return true;
-			if (Util.haveTechnology("wingConnector"))
-				return true;
-			if (Util.haveTechnology("winglet3"))
-				return true;
 
-			return false;
-		}
-	}
+	
     }
 }
