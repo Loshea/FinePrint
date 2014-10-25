@@ -22,12 +22,29 @@ namespace FinePrint.Contracts
     /// </summary>
     class TouristContract : Contract
     {
+        KerbalRoster newTouristRoster=null;
         CelestialBody targetBody = null;
 		double minAltitude = 0.0;
 		double maxAltitude = 2000.0;
         double centerLatitude = 0.0;
         double centerLongitude = 0.0;
         private bool isLowAltitude = false;
+        private string MinOrMax = "Max";
+        private double sustainedGs = 9.0;
+
+
+        protected override void OnAccepted()
+        {
+            ProtoCrewMember touristKerbal= newTouristRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Tourist);
+            touristKerbal.name = Util.randomKerbalName(1);
+            Debug.Log("Generated a new " + touristKerbal.type + " named " + touristKerbal.name);
+            base.OnAccepted();
+        }
+
+        protected override void OnCompleted()
+        {
+            base.OnCompleted();
+        }
 
 		protected override bool Generate()
 		{
@@ -252,30 +269,31 @@ namespace FinePrint.Contracts
 
 		protected override string GetTitle()
 		{
-            return "Perform aerial surveys of " + targetBody.theName + " at an altitude of " + (int)minAltitude + " to " + (int)maxAltitude + ".";
+            return "Take a tourist  into space around " + targetBody.theName + " at an altitude of " + (int)minAltitude + " to " + (int)maxAltitude + ".";
 		}
 
 		protected override string GetDescription()
 		{
 			//those 3 strings appear to do nothing
-			return TextGen.GenerateBackStories(Agent.Name, Agent.GetMindsetString(), "flying", "not crashing", "aerial", new System.Random().Next());
+			return TextGen.GenerateBackStories(Agent.Name, Agent.GetMindsetString(), "Sight Seeing", "Take a tourist for a spin in space", "tourist", new System.Random().Next());
 		}
 
 		protected override string GetSynopsys()
 		{
-            return "There are places on " + targetBody.theName + " that we don't know much about, fly over them and see what you can see.";
+            return "In order to increase our reputation with the public, and to be able to continue to fund Jeb's snacks habit, we have decided to open up a space tourism service.  We want you to take a tourist into orbit around " + targetBody.theName+".\nNeedless to say,they should be brought back alive.";
+
 		}
 
 		protected override string MessageCompleted()
 		{
-            return "You have successfully performed aerial surveys at all of the points of interest on " + targetBody.theName + ".";
+            return "Your passenger has enjoyed their orbit around " + targetBody.theName + ", and will be recommending you to their friends!";
 		}
 
         protected override string GetNotes()
         {
             string notes = "";
-
-            if (Util.IsGasGiant(targetBody) && !isLowAltitude)
+            notes += "Your passenger has requested a " + MinOrMax + "G-Load of " + sustainedGs + " for this flight.";
+           /*if (Util.IsGasGiant(targetBody) && !isLowAltitude)
                 notes += "Warning: this contract specifies flight in the atmosphere of a gas giant.";
             else if (Util.IsGasGiant(targetBody) && isLowAltitude)
                 notes += "Warning: this is a low altitude flight contract for a gas giant. We recommend sending cheap unmanned probes on a one way trip.";
@@ -284,7 +302,7 @@ namespace FinePrint.Contracts
 
             //In Gene's dialogue, the notes smush up against the parameters. Add one new line.
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                notes += "\n";
+                notes += "\n";*/
 
             return notes;
         }
@@ -292,12 +310,14 @@ namespace FinePrint.Contracts
 		protected override void OnLoad(ConfigNode node)
 		{
             Util.CheckForPatchReset();
-			Util.LoadNode(node, "AerialContract", "targetBody", ref targetBody, Planetarium.fetch.Home);
-			Util.LoadNode(node, "AerialContract", "minAltitude", ref minAltitude, 0.0);
-            Util.LoadNode(node, "AerialContract", "maxAltitude", ref maxAltitude, 10000);
-            Util.LoadNode(node, "AerialContract", "centerLatitude", ref centerLatitude, 0.0);
-            Util.LoadNode(node, "AerialContract", "centerLongitude", ref centerLongitude, 0.0);
-            Util.LoadNode(node, "AerialContract", "isLowAltitude", ref isLowAltitude, false);
+			Util.LoadNode(node, "TouristContract", "targetBody", ref targetBody, Planetarium.fetch.Home);
+			Util.LoadNode(node, "TouristContract", "minAltitude", ref minAltitude, 0.0);
+            Util.LoadNode(node, "TouristContract", "maxAltitude", ref maxAltitude, 10000);
+            Util.LoadNode(node, "TouristContract", "MinOrMax", ref MinOrMax, "Max");
+            Util.LoadNode(node, "TouristContract", "sustainedGs", ref sustainedGs, 9.0);
+            Util.LoadNode(node, "TouristContract", "centerLatitude", ref centerLatitude, 0.0);
+            Util.LoadNode(node, "TouristContract", "centerLongitude", ref centerLongitude, 0.0);
+            Util.LoadNode(node, "TouristContract", "isLowAltitude", ref isLowAltitude, false);
 		}
 
 		protected override void OnSave(ConfigNode node)
@@ -316,7 +336,5 @@ namespace FinePrint.Contracts
             return true;
 		}
 
-
-	
     }
 }

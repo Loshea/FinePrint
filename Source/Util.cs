@@ -907,18 +907,6 @@ namespace FinePrint
             return thing;
         }
 
-        /// <summary>
-        /// Will use this to generate toursts if i can't get Kerbal.GenerateNewKerbal(ProtoCrewTYpe.Tourist) to work.
-        /// </summary>
-        /// <param name="kerbalType"></param>
-        /// <returns></returns>
-        public static Kerbal generateKerbal(ProtoCrewMember kerbalType)
-        {
-            Kerbal newTemporaryCrew = new Kerbal();
-            newTemporaryCrew.protoCrewMember = kerbalType;
-            newTemporaryCrew.name = randomKerbalName(1);
-            Debug.Log("Created new kerbal " + kerbalType.ToString() + " named " + newTemporaryCrew.name);
-            return newTemporaryCrew;
-        }
+    
     }
 }

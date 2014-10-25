@@ -134,7 +134,7 @@ namespace FinePrint
             public static class Stress
             {
                 public static float MaxGForce = 13;
-                public static float MinGForce - 3;
+                public static float MinGForce = 3;
                 public static long  MaxSustainedDuration=1000;
                 public static long  MinSustainedDuration=30;
             }
@@ -565,7 +565,7 @@ namespace FinePrint
             //I could probably do this in a loop, but these are really settings I need to modify by hand, so I will do it manually.
             ConfigNode topNode = config.AddNode(new ConfigNode("FinePrint"));
 
-            ConfigNode touristNode=topNode.AddNode(new ConfigNode("Tourist");
+            ConfigNode touristNode=topNode.AddNode(new ConfigNode("Tourist"));
             ConfigNode touristExpire = touristNode.AddNode(new ConfigNode("Expiration"));
             ConfigNode touristFunds = touristNode.AddNode(new ConfigNode("Funds"));
             ConfigNode touristScience = touristNode.AddNode(new ConfigNode("Science"));
